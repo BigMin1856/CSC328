@@ -18,4 +18,4 @@ def client_handle(client_sock):
 
 
 
-#server.close()
+server.close()
