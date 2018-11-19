@@ -84,6 +84,7 @@ def main(port_number):
 		elif (user_cmd == "EXIT"):
 			tcp_sockfd.send('BYE'.encode(encoding='utf-8'))
 			tcp_sockfd.close()
+			print("\nConnection to {0} closed. Goodbye.".format(hostIP))
 			exit(0)
 
 
