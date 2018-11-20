@@ -1,21 +1,24 @@
-import os , socket , threading , sys
+import sys , socket , random
 
-IPBind = "10.500.5.3"
-PortBind = 9000
+port_num = 2048
+bind_ip = "0.0.0.0"
 
-server = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
-server.bind((IPBind, PortBind))
-server.listen(10)
+server = socket.socket(family=socket.AF_INET , type=socket.SOCK_STREAM)
+server.bind((bind_ip , port_num))
+server.listen(5)
 
-print("Listening on " ,IPBind , ":", PortBind)
+print("Listening on {} : {}".format(bind_ip , port_num))
 
-def client_handle(client_sock):
-    reqst = client_sock.recv(10)
-    client_sock.send('HELLO')
-    client_sock.close()
+def clnt_handler(client_sock):
+    client_sock.send("HELLO".encode(encoding='utf-8'))
 
-
-
-
-
-server.close()
+while True:
+    client_sock, address = server.accept()
+    print("Connected from: {} : {}".format(address[0],address[1]))
+    clnt_handler(client_sock)
+    data = client_sock.recv(10)
+    message = data.decode()
+    if message == "BYE":
+        client_sock.close()
+        print("Connection to {} has been terminated".format(address[0]))
+        break
