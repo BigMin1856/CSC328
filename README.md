@@ -2,15 +2,24 @@
 Network Programming Git Repository
 
 Team: Marc Minnick & Leo Atkinson
+
 Major: Computer Science - Software Development
+
 Course: Csc328 - Network Programming
+
 Professor: Dr. Frye
+
 Date: December 4th, 2018
+
 Language: Python 3
+
 Filename: readme.txt
+
 Purpose: Provides client-side interface for a download server.
 			Takes cmd line input.
+
 Compilation: Not Necessary
+
 Execution command: python3 client.py <hostname> <port no. (optional)>
 					python3 server.py <port no. (optional)>
 
