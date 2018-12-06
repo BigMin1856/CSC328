@@ -20,6 +20,7 @@
 import sys
 import socket
 import random
+import pickle
 
 #default port number
 port_number = 2048
@@ -51,7 +52,7 @@ def main(port_number):
 	if len(sys.argv) == 2:
 		hostName = sys.argv[1]
 	elif len(sys.argv) == 3:
-		hostName = sys.argv[1]
+		hostIP = sys.argv[1]
 		port_number = sys.argv[2]
 	else:
 		print("USAGE ERROR: Improper number of arguments.")
@@ -74,7 +75,7 @@ def main(port_number):
 
 	try:
 		#establish connection
-		tcp_sockfd.connect((iphost, portNo))
+		tcp_sockfd.connect((hostIP, port_number))
 	except socket.error as error:
 		print("ERROR: Connection to server failed.")
 		print(error)
@@ -122,10 +123,24 @@ def main(port_number):
 
 			print(msg)
 
-		elif (user_cmd == "CD"):
+		elif user_cmd == "DOWNLOAD":
 
+			sendMsg(tcp_sockfd, user_cmd)
+			
+			msg = recvMsg(tcp_sockfd)
+
+			print(msg)
+
+		elif ('CD' in user_cmd):
+			sendMsg(tcp_sockfd , user_cmd)
+
+			path = input("New Directory: ")
+			tcp_sockfd.send(path.encode('utf-8'))
+
+			msg = recvMsg(tcp_sockfd)
+			print(msg)
 		elif (user_cmd == "DOWNLOAD"):
-
+			break
 		elif (user_cmd == "EXIT"):
 			try:
 				tcp_sockfd.send("BYE".encode(encoding='utf-8'))
