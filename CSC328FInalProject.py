@@ -107,13 +107,17 @@ def cd(client_sock , message):
 
 
 def download(client_sock):
-    filename = 'test.txt'
+    filename = client_sock.recv(30) #getting filename from client
+    filename = filename.decode() #decoding name
     f = open(filename, 'rb')
-    l = f.read(1024)
-    while l:
+    
+    while True:
+        l = f.read(1024)
         client_sock.send(l)
         print("Sent {}".format(repr(l)))
-        l = f.read(1024)
+        if len(l) == 0:
+            break
+        #l = f.read(1024)
     f.close()
 
     print("Done Sending")
