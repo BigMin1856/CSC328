@@ -24,7 +24,7 @@ import pickle
 
 #default port number
 port_number = 2048
-max_size = 8192
+max_size = 1024
 
 def sendMsg(tcp_sockfd, msg):
 	try:
@@ -38,7 +38,7 @@ def recvMsg(tcp_sockfd):
 		#get message from server
 		msg = tcp_sockfd.recv(max_size)
 		#decoding message
-		msg = msg.decode("utf-8").strip()
+		msg = msg.decode("utf-8")
 	except socket.error as error:
 		print("ERROR: Failure recieving message.")
 		print(error)
@@ -103,10 +103,10 @@ def main(port_number):
 		if (user_cmd == "MENU"):
 			print("Welcome to our Client/Server Download App")
 			print("\nEnter a command listed below:")
-			print("PWD - Print Working Directory (not implemented)")
-			print("DIR - Print Content of Current Directory (not implemented)")
-			print("CD - Change Directory (not implemented)")
-			print("DOWNLOAD - Download specified file (not implemented)")
+			print("PWD - Print Working Directory")
+			print("DIR - Print Content of Current Directory")
+			print("CD - Change Directory (will prompt for directory name)")
+			print("DOWNLOAD - Download specified file (will prompt for file name)")
 			print("EXIT - Close Connection and Exit")
 			first = False
 		elif (user_cmd == "PWD"):
@@ -123,24 +123,34 @@ def main(port_number):
 
 			print(msg)
 
-		elif user_cmd == "DOWNLOAD":
-
+		elif (user_cmd == "DOWNLOAD"):
+			
 			sendMsg(tcp_sockfd, user_cmd)
 			
-			msg = recvMsg(tcp_sockfd)
+			writefile = input("New Directory Name >>> ")
+			
+			sendMsg(tcp_sock_fd, writefile)
+			try:
+				with open(writefile, 'w') as wf:
+					while(True):
+						msg = recvMsg(tcp_sockfd)
+						if msg == '':
+							break
+						wf.write(wf)
+				print("{0} has successfully downloaded".format(writeFile))		
+			except:
+				print("ERROR downloading file")
 
 			print(msg)
 
-		elif ('CD' in user_cmd):
+		elif (user_cmd == "CD"):
 			sendMsg(tcp_sockfd , user_cmd)
 
-			path = input("New Directory: ")
+			path = input("New Directory Name >>> ")
 			tcp_sockfd.send(path.encode('utf-8'))
 
 			msg = recvMsg(tcp_sockfd)
 			print(msg)
-		elif (user_cmd == "DOWNLOAD"):
-			break
 		elif (user_cmd == "EXIT"):
 			try:
 				tcp_sockfd.send("BYE".encode(encoding='utf-8'))
@@ -155,7 +165,7 @@ def main(port_number):
 			print("Invalid Command. Please try your command again.")
 
 		#Asking for and storing user input
-		user_cmd = input("\nEnter command >>>")
+		user_cmd = input("\nEnter command >>> ")
 
 		#Normalizing user input
 		user_cmd = user_cmd.strip().upper()
