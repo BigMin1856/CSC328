@@ -121,22 +121,34 @@ def main(port_number):
 			
 			msg = recvMsg(tcp_sockfd)
 
-			print(msg)
+			if len(msg) == 0:
+				print("No files current in directory.")
+			else:
+				msg = msg[2:-2]
+				msg = msg.split(',')
+				[print(file) for file in msg]
 
 		elif (user_cmd == "DOWNLOAD"):
 			
 			sendMsg(tcp_sockfd, user_cmd)
 			
-			writefile = input("New Directory Name >>> ")
+			writefile = input("File Name >>> ")
 			
-			sendMsg(tcp_sock_fd, writefile)
+			sendMsg(tcp_sockfd, writefile)
 			try:
-				with open(writefile, 'w') as wf:
-					while(True):
-						msg = recvMsg(tcp_sockfd)
-						if msg == '':
-							break
-						wf.write(wf)
+				wf = open(writefile, 'w')
+				idx = 0
+				while(True):
+					print(idx)
+					idx +=1
+					msg = recvMsg(tcp_sockfd)
+					print(msg)
+					if msg:
+						wf.write(msg)
+					else:
+						print("break")
+						break				
+				wf.close()
 				print("{0} has successfully downloaded".format(writeFile))		
 			except:
 				print("ERROR downloading file")
@@ -146,7 +158,7 @@ def main(port_number):
 		elif (user_cmd == "CD"):
 			sendMsg(tcp_sockfd , user_cmd)
 
-			path = input("New Directory Name >>> ")
+			path = input("Directory Name >>> ")
 			tcp_sockfd.send(path.encode('utf-8'))
 
 			msg = recvMsg(tcp_sockfd)
