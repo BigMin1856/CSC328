@@ -116,6 +116,7 @@ def download(client_sock):
         client_sock.send(l)
         print("Sent {}".format(repr(l)))
         if len(l) == 0:
+            client_sock.send("-DONE-".encode(encoding='utf-8'))
             break
         #l = f.read(1024)
     f.close()
