@@ -122,11 +122,13 @@ def main(port_number):
 			msg = recvMsg(tcp_sockfd)
 
 			if len(msg) == 0:
-				print("No files current in directory.")
+				print("\nNo files current in directory.")
 			else:
-				msg = msg[2:-2]
+				print("\nFiles in current directory:\n")
+				msg = msg[1:-2]
 				msg = msg.split(',')
-				[print(file) for file in msg]
+				for file in msg:
+					print(file)
 
 		elif (user_cmd == "DOWNLOAD"):
 			
@@ -138,16 +140,21 @@ def main(port_number):
 			try:
 				wf = open(writefile, 'w')
 				idx = 0
-				while(True):
+				loopT = True
+				while(loopT):
 					print(idx)
 					idx +=1
 					msg = recvMsg(tcp_sockfd)
 					print(msg)
-					if msg:
+
+					if "DONE" in msg:
+						msg = msg.replace('DONE', '')
 						wf.write(msg)
-					else:
 						print("break")
-						break				
+						loopT = False
+
+					if msg:
+						wf.write(msg)			
 				wf.close()
 				print("{0} has successfully downloaded".format(writeFile))		
 			except:
