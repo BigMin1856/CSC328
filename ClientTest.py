@@ -20,7 +20,7 @@
 import sys
 import socket
 import random
-import pickle
+import os
 
 #default port number
 port_number = 2048
@@ -93,16 +93,18 @@ def main(port_number):
 
 	if msg == "HELLO":
 		print("Connected to: \nHost IP: {0} \nPort #: {1}".format(hostIP, port_number))
+		print("Welcome to our Client/Server Download App")
 
 	user_cmd = "MENU"
 
+	dirlist = os.listdir()
 	#begin user input loop
 	while(True):
 
 		#Main logic for user input
 		if (user_cmd == "MENU"):
-			print("Welcome to our Client/Server Download App")
-			print("\nEnter a command listed below:")
+			print("\nEnter a command listed below:\n")
+			print("MENU - Show List of Valid Commands")
 			print("PWD - Print Working Directory")
 			print("DIR - Print Content of Current Directory")
 			print("CD - Change Directory (will prompt for directory name)")
@@ -135,32 +137,42 @@ def main(port_number):
 			sendMsg(tcp_sockfd, user_cmd)
 			
 			writefile = input("File Name >>> ")
-			
+
+			if writefile in dirlist:
+
+				while (True):
+					userResp = input("Are you sure you want to overwrite {0} ? (y/n)>>> ".format(writefile))
+					userResp = userResp.upper().strip()
+
+					if((userResp == 'Y') or (userResp == 'N')):
+						break
+					else:
+						print("Enter valid response")
+						continue
+				
+				if (userResp == 'N'):
+					print("Overwrite aborted\n")
+					user_cmd = 'MENU'
+					continue
+
 			sendMsg(tcp_sockfd, writefile)
 			try:
 				wf = open(writefile, 'w')
-				idx = 0
 				loopT = True
 				while(loopT):
-					print(idx)
-					idx +=1
 					msg = recvMsg(tcp_sockfd)
-					print(msg)
 
 					if "DONE" in msg:
 						msg = msg.replace('DONE', '')
 						wf.write(msg)
-						print("break")
+						wf.close()
+						print("{0} has successfully downloaded".format(writeFile))	
 						loopT = False
-
+						
 					if msg:
-						wf.write(msg)			
-				wf.close()
-				print("{0} has successfully downloaded".format(writeFile))		
+						wf.write(msg)				
 			except:
 				print("ERROR downloading file")
-
-			print(msg)
 
 		elif (user_cmd == "CD"):
 			sendMsg(tcp_sockfd , user_cmd)
