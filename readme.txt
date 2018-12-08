@@ -1,10 +1,10 @@
-Team: Marc Minnick & Leo Atkinson
-Major: Computer Science - Software Development
-Course: Csc328 - Network Programming
-Professor: Dr. Frye
-Date: December 4th, 2018
-Language: Python 3
-Filename: readme.txt
+Team: 		Marc Minnick & Leo Atkinson
+Major: 		Computer Science - Software Development
+Course: 	Csc328 - Network Programming
+Professor: 	Dr. Frye
+Date: 		December 4th, 2018
+Language: 	Python 3
+Filename: 	readme.txt
 Purpose: Provides client-side interface for a download server.
 			Takes cmd line input.
 Compilation: Not Necessary
@@ -36,8 +36,35 @@ the contense of the file system on the server.
 
 Protocol:
 
-To do
+Client command implementations are discussed below. 
+
+MENU - Client side command to print the valid commands and their explaination.
+
+PWD - Server responds with current PATH
+
+DIR - Server respons with a list of the contense of the current directory (files 
+		and directories). Server response is parsed and formatted on client side.
+
+CD - Client sends command, server waits for additional input. Client app asks for 
+		a directory name and sends to server. Server changes to requested directory,
+		if it is valid.
+
+DOWNLOAD - Client sends command, server waits for additional input. Client app asks 
+			for a file name, sends to server, and gets ready for a response by opening 
+			the a new file of the same name. Server opens specified file and  begins 
+			sending file in a loop of specified-sized chunks (same on both client & 
+			server side). Client recieves data from server and writes it to the open 
+			file until it gets message with "DONE" in it. Server and client both close 
+			their open files.
+
+EXIT - Client sends BYE message and closes socket connection. Upon reciept, server 
+		closes socket connection.
+
 
 Known Issues:
 
-To do
+Server is iterative.
+
+Not all input is validated. 
+
+Client issues error on download, even though file downloads successfully.
