@@ -51,5 +51,5 @@ Protocol:
 To do
 
 Known Issues:
-
-To do
+	Cannot pass port number higher than 65535 or server errors out
+	Iterative server only (Cannot run more than one client at once)
